@@ -1,0 +1,17 @@
+Meyer, David ID:33
+
+1. john moses: 0.369034904968
+2. christopher lynnes: 0.355615981089
+3. john morton: 0.355246801279
+4. charles thompson: 0.343819063045
+5. rahul ramachandran: 0.342715771504
+6. peter baumann: 0.341343521108
+7. luca cinquini: 0.341203113377
+8. helen conover: 0.335967455124
+9. thomas huang: 0.335627912907
+10. jing li: 0.334140492654
+11. yaxing wei: 0.332046550077
+12. james gallagher: 0.33119823519
+13. joe lee: 0.322984418805
+14. aaron smith: 0.318589176923
+15. kevin murphy: 0.318052458334

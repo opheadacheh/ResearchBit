@@ -1,0 +1,16 @@
+Torbert, Chris ID:683
+
+1. ted habermann: 0.237229181859
+2. don stott: 0.216096664492
+3. katie baynes: 0.214532430349
+4. daniel pilone: 0.210825730937
+5. david meyer: 0.208792790769
+6. karl benedict: 0.204578596854
+7. thomas huang: 0.201380160211
+8. ed armstrong: 0.197988295988
+9. aleksandar jelenak: 0.197119410098
+11. curt tilmes: 0.186871556499
+12. yaxing wei: 0.186248109999
+13. helen conover: 0.185860960616
+14. ruth duerr: 0.185528750682
+15. lalit wanchoo: 0.178952195365
