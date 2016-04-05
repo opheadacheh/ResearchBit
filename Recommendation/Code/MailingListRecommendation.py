@@ -197,7 +197,7 @@ def deleteCoauthor(coauther, recommendation, index):
 
 # In[64]:
 
-def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,listsize):
+def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,listsize, outname):
     temp = []
     for j in range(tfidf_matrix_train.shape[0]):
         targetname = relname[j]
@@ -220,7 +220,7 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
                 for k in recList: 
                     recomd.append(relname[k])
                     similar.append(result[0][k]) 
-                with open('../RecommendationResult/TFSerMailModel131/'+relname[j]+'.txt','w') as fn:
+                with open('../RecommendationResult/'+outname+'Model/'+relname[j]+'.txt','w') as fn:
                     fn.write(realname1[n]+" ID:"+str(j)+"\n\n")
                     for n1 in xrange(len(recomd)):
                         for m in range(len(othername)):
@@ -233,11 +233,12 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def run(k1, k2, listsize, outname):
     start_time = time.time()
-    k1 = int(sys.argv[1])
-    k2 = int(sys.argv[2])
-    listsize = int(sys.argv[3])
+    # k1 = int(sys.argv[1])
+    # k2 = int(sys.argv[2])
+    # listsize = int(sys.argv[3])
     stopWords = readinStopWords()
     train_set,name = build_train_set("../Data/Data/Profile_Data",stopWords)
     tfidf_vectorizer = TfidfVectorizer(norm=u'l2',stop_words=stopWords,use_idf=False)
@@ -249,7 +250,7 @@ if __name__ == "__main__":
     ser_profile = buildSreModel(basic_profile,train_set,k1,k2,True)
     authorMap = checkCoauther(train_set)
 
-    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,listsize)
+    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,listsize, outname)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 

@@ -111,9 +111,9 @@ def checkCoauther(train_set):
                         Coauther[key] = tempset
     return Coauther
 
-def checkSession(train_set):
+def checkSession(train_set, filename):
     Coauther = {}
-    with open("../Data/Data/IDs_Data/sessionNodes.txt") as text_file:
+    with open(filename) as text_file:
         f = text_file.read()
     array = f.split('\n')
     for i in xrange(len(array)):
@@ -137,12 +137,12 @@ def checkSession(train_set):
                         Coauther[key] = tempset
     return Coauther
 
-def buildSreModel(basic_matrix,profile,k1,k2,coauther = False):
+def buildSreModel(basic_matrix,profile,k1,k2,filename, coauther = False):
     ser_matrix = basic_matrix[:]
     k1 = 1
     k2 = 1
     if(coauther):
-        authorMap = checkSession(profile)
+        authorMap = checkSession(profile, filename)
         for target,people in authorMap.items():
             print target,'correspond',people
             people = list(people)
@@ -175,7 +175,7 @@ def deleteCoauthor(coauther, recommendation, index):
     return recommendation
 
 
-def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,testdata,listsize):
+def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authorMap,testdata,listsize, outname):
     temp = []
     for j in range(tfidf_matrix_train.shape[0]):
         targetname = relname[j]
@@ -197,7 +197,7 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
                 for k in recList: 
                     recomd.append(relname[k])
                     similar.append(result[0][k]) 
-                with open('../RecommendationResult/TFSessionModel131/'+relname[j]+'.txt','w') as fn:
+                with open('../RecommendationResult/'+outname+'Model/'+relname[j]+'.txt','w') as fn:
                     fn.write(realname1[n]+" ID:"+str(j)+"\n\n")
                     for n1 in xrange(len(recomd)):
                         for m in range(len(othername)):
@@ -210,23 +210,25 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+def run(k1, k2, listsize, idf, session, outname):
     start_time = time.time()
-    k1 = int(sys.argv[1])
-    k2 = int(sys.argv[2])
-    listsize = int(sys.argv[3])
+    # k1 = int(sys.argv[1])
+    # k2 = int(sys.argv[2])
+    # listsize = int(sys.argv[3])
+    filename = "../Data/Data/IDs_Data/sessionNodes.txt"
     stopWords = readinStopWords()
     train_set,name = build_train_set("../Data/Data/Profile_Data",stopWords)
-    tfidf_vectorizer = TfidfVectorizer(norm=u'l2',stop_words=stopWords,use_idf=False)
+    tfidf_vectorizer = TfidfVectorizer(norm=u'l2',stop_words=stopWords,use_idf=idf)
     basic_profile = tfidf_vectorizer.fit_transform(train_set[:])
 
     othername,realname,testdata = readinData()
     othername1,realname1 = readinData2()
 
-    ser_profile = buildSreModel(basic_profile,train_set,k1,k2,True)
+    ser_profile = buildSreModel(basic_profile,train_set,k1,k2,filename, session)
     authorMap = checkCoauther(train_set)
 
-    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,testdata,listsize)
+    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,testdata,listsize, outname)
 
     print("--- %s seconds ---" % (time.time() - start_time))
 

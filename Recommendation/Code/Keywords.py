@@ -31,8 +31,8 @@ class MyCorpus(object):
             yield self.dictionary.doc2bow(tokens)
 
 
-def readinStopWords():
-    with open("../Data/stopwords.txt") as text_file:
+def readinStopWords(filename):
+    with open(filename) as text_file:
         f = text_file.read()
     stops = f.split(" ")
     stop_words_list = stops
@@ -43,8 +43,8 @@ def readinStopWords():
     return stopWords
 
 
-def readinData():
-    df = pd.read_csv("../Data/Data_New/Data_Out/DataFound.csv")
+def readinData(filename):
+    df = pd.read_csv(filename)
     testdata = df[df['Asilomar'] == True]['Author'].tolist()
     realname = df['Author'].tolist()
     othername = []
@@ -56,8 +56,8 @@ def readinData():
     testindex = df[df['Asilomar'] == True]['ID'].tolist()
     return othername,realname,testdata
 
-def readinData2():
-    df = pd.read_csv("../Data/AsilomarAttendeeReport.csv")
+def readinData2(filename):
+    df = pd.read_csv(filename)
     realname1 = df['Name'].tolist()
     othername1 = []
     for i in range(173):
@@ -83,9 +83,9 @@ def build_train_set(topdir, stoplist):
     return train_set,name
 
 
-def checkCoauther(train_set):
+def checkCoauther(train_set, publicationNodesfile):
     Coauther = {}
-    with open("../Data/Data/IDs_Data/publicationNodes.txt") as text_file:
+    with open(publicationNodesfile) as text_file:
         f = text_file.read()
     array = f.split('\n')
     for i in xrange(len(array)):
@@ -113,9 +113,9 @@ def checkCoauther(train_set):
     return Coauther
 
 
-def checkSession(train_set):
+def checkSession(train_set, sessionfile):
     Coauther = {}
-    with open("../Data/Data_New/Data_Out/IDs_Data/keywordATTNodes.txt") as text_file:
+    with open(sessionfile) as text_file:
         f = text_file.read()
     array = f.split('\n')
     for i in xrange(len(array)):
@@ -140,10 +140,10 @@ def checkSession(train_set):
     return Coauther
 
 
-def buildSreModel(basic_matrix,profile,k1,k2,coauther = False):
+def buildSreModel(basic_matrix,profile,k1,k2, sessionfile, coauther = False):
     ser_matrix = basic_matrix[:]
     if(coauther):
-        authorMap = checkSession(profile)
+        authorMap = checkSession(profile, sessionfile)
         for target,people in authorMap.items():
             print target,'correspond',people
             people = list(people)
@@ -176,7 +176,7 @@ def deleteCoauthor(coauther, recommendation, index):
         originalRec = recommendation[:]   
     return recommendation
 
-def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,testdata,listsize):
+def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,testdata,listsize, outname):
     temp = []
     for j in range(tfidf_matrix_train.shape[0]):
         targetname = relname[j]
@@ -198,7 +198,7 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
                 for k in recList: 
                     recomd.append(relname[k])
                     similar.append(result[0][k]) 
-                with open('../RecommendationResult/TFKeywordModel131/'+relname[j]+'.txt','w') as fn:
+                with open('../RecommendationResult/'+outname+'Model/'+relname[j]+'.txt','w') as fn:
                     fn.write(realname1[n]+" ID:"+str(j)+"\n\n")
                     for n1 in xrange(len(recomd)):
                         for m in range(len(othername)):
@@ -209,23 +209,35 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
                                 fn.write(str(n1+1)+". "+str(realname[m])+": "+str(similar[n1])+"\n")
     return temp
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+#     start_time = time.time()
+#     k1 = int(sys.argv[1])
+#     k2 = float(sys.argv[2])
+#     listsize = int(sys.argv[3])
+def run(k1, k2, listsize, outname):
+    # stop_file = str(sys.argv[4]) #"../Data/stopwords.txt"
+    # file1 = str(sys.argv[5]) #"../Data/Data_New/Data_Out/DataFound.csv"
+    # file2 = str(sys.argv[6]) #"../Data/AsilomarAttendeeReport.csv"
+    # publicationNodesfile = str(sys.argv[7]) #"../Data/Data/IDs_Data/publicationNodes.txt"
+    # sessionfile = str(sys.argv[8]) #"../Data/Data_New/Data_Out/IDs_Data/keywordATTNodes.txt"
     start_time = time.time()
-    k1 = int(sys.argv[1])
-    k2 = int(sys.argv[2])
-    listsize = int(sys.argv[3])
-    stopWords = readinStopWords()
+    stop_file = str("../Data/stopwords.txt") 
+    file1 = str("../Data/Data_New/Data_Out/DataFound.csv")
+    file2 = str("../Data/AsilomarAttendeeReport.csv") 
+    publicationNodesfile = str("../Data/Data/IDs_Data/publicationNodes.txt") 
+    sessionfile = str("../Data/Data_New/Data_Out/IDs_Data/keywordATTNodes.txt") 
+
+    stopWords = readinStopWords(stop_file)
     train_set,name = build_train_set("../Data/Data/Profile_Data",stopWords)
     tfidf_vectorizer = TfidfVectorizer(norm=u'l2',stop_words=stopWords,use_idf=False)
     basic_profile = tfidf_vectorizer.fit_transform(train_set[:])
 
-    othername,realname,testdata = readinData()
-    othername1,realname1 = readinData2()
+    othername,realname,testdata = readinData(file1) 
+    othername1,realname1 = readinData2(file2) 
+    ser_profile = buildSreModel(basic_profile,train_set,k1,k2, sessionfile, True)
+    authorMap = checkCoauther(train_set, publicationNodesfile)
 
-    ser_profile = buildSreModel(basic_profile,train_set,k1,k2,True)
-    authorMap = checkCoauther(train_set)
-
-    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,testdata,listsize)
+    writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,testdata,listsize, outname)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
