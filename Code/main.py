@@ -170,13 +170,15 @@ class List(db.Model):
     CheckIn = db.Column(db.Integer)
     PublicTag = db.Column(db.Integer)
     EventID = db.Column(db.Integer)
+    SessionID = db.Column(db.Integer)
 
-    def __init__(self, name, email, check_in, public, event_id):
+    def __init__(self, name, email, check_in, public, event_id, session_id = -1):
         self.Name = name
         self.Email = email
         self.CheckIn = check_in
         self.PublicTag = public
         self.EventID = event_id
+        self.SessionID = session_id
 
 
 # create a table for all researchers to help locate their profiles.
@@ -233,71 +235,125 @@ def get(lastname, firstname, method):
 @application.route('/r/get/', methods=['GET'])
 def recomd_get():
     args = request.args
+    print args.keys()
     name = args['firstname'].lower()+args['lastname'].lower()
     status = List.query.filter_by(Name=name, Email=args['email']).first()
-    #print args['email']
-    #print status
-    #print status.CheckIn
     if status == None:
         return 'Person not found\n'
     elif status.CheckIn != 1:
         return 'Person didn\'t check in\n'
     elif status.EventID != int(args['event_id']):
         return 'Person checked in but event ID doesn\'t match\n'
-    else:
+    elif not 'session_id' in args.keys():
         user = RECMDLIST_4.query.filter_by(TARGET_PERSON=args['lastname'] + ', ' + args['firstname']).first()
         recomd_list = ''
-
         name = user.PERSON1.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON1.title() + ', ' + status.Email + '|'
 
         name = user.PERSON2.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON2.title() + ', ' + status.Email + '|'
 
         name = user.PERSON3.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON3.title() + ', ' + status.Email + '|'
 
         name = user.PERSON4.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON4.title() + ', ' + status.Email + '|'
 
         name = user.PERSON5.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON5.title() + ', ' + status.Email + '|'
 
         name = user.PERSON6.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON6.title() + ', ' + status.Email + '|'
 
         name = user.PERSON7.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON7.title() + ', ' + status.Email + '|'
 
         name = user.PERSON8.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON8.title() + ', ' + status.Email + '|'
 
         name = user.PERSON9.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON9.title() + ', ' + status.Email + '|'
 
         name = user.PERSON10.replace(' ', '')
         status = List.query.filter_by(Name=name).first()
-        if status.PublicTag == 1:
+        if status.PublicTag == 1 and status.EventID == int(args['event_id']):
             recomd_list += user.PERSON10.title() + ', ' + status.Email + '|'
+    elif 'session_id' in args.keys():
+        if status.SessionID != int(args['session_id']):
+            return 'Person checked in to the event, but session ID doesn\'t match'
+        else:
+            user = RECMDLIST_4.query.filter_by(TARGET_PERSON=args['lastname'] + ', ' + args['firstname']).first()
+            recomd_list = ''
 
+            name = user.PERSON1.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON1.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON2.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON2.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON3.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON3.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON4.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON4.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON5.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON5.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON6.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON6.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON7.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON7.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON8.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON8.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON9.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON9.title() + ', ' + status.Email + '|'
+
+            name = user.PERSON10.replace(' ', '')
+            status = List.query.filter_by(Name=name).first()
+            if status.PublicTag == 1 and status.EventID == int(args['event_id'])  and status.SessionID == int(args['session_id']):
+                recomd_list += user.PERSON10.title() + ', ' + status.Email + '|'
+    else:
+        recomd_list = 'wrong input'
     return recomd_list
 
 
@@ -345,6 +401,10 @@ def add_profile():
         user.CheckIn = int(profile['check_in'])
         user.PublicTag = int(profile['public_tag'])
         user.EventID = int(profile['event_id'])
+        if 'session_id' in profile.keys():
+            user.SessionID = int(profile['session_id'])
+        else:
+            user.SessionID = -1
         db.session.commit()
         return 'infomation updated\n'
 
@@ -441,7 +501,7 @@ def index():
 
 
 if __name__ == "__main__":
-    # get_db()
+    get_db()
     application.run(host='0.0.0.0', debug=True)
 
 # sample request commands:
@@ -450,5 +510,5 @@ if __name__ == "__main__":
 # requests.get('http://0.0.0.0:5000/p/get/', params={'firstname':'Denise', 'lastname':'Hills', 'email':'denisehills@gmail.com'})
 
 # curl --data "name=denisehills&email=denisehills@gmail.com&check_in=1&public_tag=1&event_id=1" http://54.165.138.137:5000/post/
-# curl "http://54.165.138.137:5000/r/get/?email=denisehills@gmail.com&event_id=1&lastname=Hills&firstname=Denise" -o r.json
-# curl "http://54.165.138.137:5000/p/get/?lastname=Hills&firstname=Denise&email=denisehills@gmail.com" -o profile.xml
+# curl "http://54.165.138.137:5000/r/get/?email=denisehills@gmail.com&event_id=1&lastname=Hills&firstname=Denise"
+# curl "http://54.165.138.137:5000/p/get/?lastname=Hills&firstname=Denise&email=denisehills@gmail.com"

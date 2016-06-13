@@ -109,7 +109,8 @@ def get_db():
     #     Email              CHAR(50),
     #     CheckIn            INT,
     #     PublicTag         INT,
-    #     EventID            INT);''')
+    #     EventID            INT,
+    #     SessionID         INT);''')
     # print "Table created successfully"
 
     conn.close()
@@ -128,7 +129,7 @@ def get_db():
     # for i in names:
     #     if i.endswith('\n'):
     #         i = i[:-1]
-    #     conn.execute("INSERT INTO List VALUES (?, ?, ?, ?, ?)", (i, i + '@gmail.com', 0, 1, 1))
+    #     conn.execute("INSERT INTO List VALUES (?, ?, ?, ?, ?, ?)", (i, i + '@gmail.com', 0, 1, 1, -1))
     # print "Initialized List table successfully"
 
     # profiles = open("init_profile.txt")
