@@ -1,0 +1,12 @@
+Peng, Grace ID:23
+
+1. joe lee: 0.567737762468
+2. timothy ryan: 0.540247873284
+3. andrew mitchell: 0.529877848488
+4. john morton: 0.518545301729
+5. aaron smith: 0.516382162692
+6. philip jones: 0.514061403538
+7. fan yang: 0.5062512713
+8. eugene kolker: 0.505225198231
+9. david julian: 0.504662690259
+10. robert ferraro: 0.500505218507

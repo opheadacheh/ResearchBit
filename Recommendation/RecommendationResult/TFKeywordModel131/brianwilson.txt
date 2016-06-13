@@ -1,0 +1,17 @@
+Wilson, Brian ID:608
+
+1. su zhang: 0.959987257159
+2. jing li: 0.959569898333
+3. aaron smith: 0.957741958032
+4. joe lee: 0.956188146314
+5. peter baumann: 0.952555281809
+6. georgi kostov: 0.949350547055
+7. andreas rauber: 0.933104156868
+8. andrea donnellan: 0.932531366736
+9. steven ackerman: 0.930194373306
+10. fiona murphy: 0.926810582034
+11. michael tiemann: 0.919584017505
+12. leonardo salayandia: 0.914027756317
+13. james gallagher: 0.904311269476
+14. liping di: 0.903829751144
+15. erik johnson: 0.897641176729

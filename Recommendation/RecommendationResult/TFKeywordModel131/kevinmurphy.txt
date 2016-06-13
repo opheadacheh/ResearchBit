@@ -1,0 +1,16 @@
+MURPHY, KEVIN ID:231
+
+1. charles martin: 0.94820913923
+2. steve young: 0.944903802229
+3. matthew jones: 0.944036761647
+4. philip jones: 0.941370610109
+5. stephen miller: 0.939503279546
+6. eugene kolker: 0.93653675454
+7. tyler stevens: 0.930879820779
+8. pascal hitzler: 0.927833366913
+10. timothy freeman: 0.926552480206
+11. john allison: 0.926516967489
+12. greg janee: 0.923838323541
+13. corinna gries: 0.919770187772
+14. rahul ramachandran: 0.89917901131
+15. ilya zaslavsky: 0.897613974478

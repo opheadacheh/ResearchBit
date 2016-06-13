@@ -1,0 +1,17 @@
+MURPHY, KEVIN ID:231
+
+1. jing li: 0.829339035772
+2. john morton: 0.826105676825
+3. joe lee: 0.813056242713
+4. peter baumann: 0.811861551579
+5. aaron smith: 0.806501639663
+6. su zhang: 0.800718840885
+7. fan yang: 0.799589549782
+8. jane greenberg: 0.799078035742
+9. andrew mitchell: 0.782531614496
+10. brian wilson: 0.776926149877
+11. steve young: 0.768658468761
+12. matthew jones: 0.765630126772
+13. yolanda gil: 0.755009475712
+14. philip jones: 0.754694042396
+15. stephen miller: 0.746901545166

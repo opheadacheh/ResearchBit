@@ -1,0 +1,17 @@
+Wilson, Brian ID:608
+
+1. john morton: 0.844981660521
+2. su zhang: 0.838589125201
+3. jing li: 0.836232830289
+4. aaron smith: 0.830412606736
+5. joe lee: 0.824169526239
+6. stephen miller: 0.819501024269
+7. fan yang: 0.810345744698
+8. jane greenberg: 0.810134350051
+9. peter baumann: 0.809690917922
+10. philip jones: 0.796966020855
+11. georgi kostov: 0.796770935086
+12. matthew jones: 0.794886437401
+13. andrew mitchell: 0.794158345136
+14. kevin ashley: 0.77922911607
+15. kevin murphy: 0.776926149877

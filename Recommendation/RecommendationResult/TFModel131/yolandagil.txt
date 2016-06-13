@@ -1,0 +1,17 @@
+Gil, Yolanda ID:93
+
+1. jing li: 0.811389435968
+2. john morton: 0.806819338701
+3. jane greenberg: 0.800323925652
+4. charles martin: 0.792805622589
+5. peter baumann: 0.786175835324
+6. matthew jones: 0.783079824935
+7. aaron smith: 0.781108275123
+8. fan yang: 0.768126411079
+9. brian wilson: 0.765238649107
+10. pascal hitzler: 0.763788831507
+11. kevin murphy: 0.755009475712
+12. su zhang: 0.753240132257
+13. eugene kolker: 0.742001681839
+14. andrew mitchell: 0.740476678833
+15. timothy ryan: 0.737184209278
