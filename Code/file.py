@@ -16,7 +16,6 @@ def copy(name):
             fin = open(os.path.join(sdir, fn), 'rb')
             text = fin.read()
             tname = fin.name[fin.name.rfind('/') + 1:]
-            print tname
             fout = open(tdir + tname,'wt')
             fout.write(text)
             fin.close()

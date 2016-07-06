@@ -9,15 +9,17 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
 def iter_docs(topdir, stoplist):
     for fn in os.listdir(topdir):
         fin = open(os.path.join(topdir, fn), 'rb')
         text = fin.read()
         fin.close()
-        yield (x for x in 
-            gensim.utils.tokenize(text, lowercase=True, deacc=True, 
+        yield (x for x in
+            gensim.utils.tokenize(text, lowercase=True, deacc=True,
                                   errors="ignore")
             if x not in stoplist)
+
 
 class MyCorpus(object):
 
@@ -55,6 +57,7 @@ def readinData(filename):
         othername.append(newname)
     testindex = df[df['Asilomar'] == True]['ID'].tolist()
     return othername,realname,testdata
+
 
 def readinData2(filename):
     df = pd.read_csv(filename)

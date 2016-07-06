@@ -5,6 +5,8 @@ import logging
 from sets import Set
 import pandas as pd
 import numpy as np
+from scipy.sparse import *
+from scipy import *
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -14,7 +16,7 @@ def iter_docs(topdir, stoplist):
         fin = open(os.path.join(topdir, fn), 'rb')
         text = fin.read()
         fin.close()
-        yield (x for x in 
+        yield (x for x in
             gensim.utils.tokenize(text, lowercase=True, deacc=True, 
                                   errors="ignore")
             if x not in stoplist)
@@ -25,7 +27,7 @@ class MyCorpus(object):
         self.topdir = topdir
         self.stoplist = stoplist
         self.dictionary = gensim.corpora.Dictionary(iter_docs(topdir, stoplist))
-        
+
     def __iter__(self):
         for tokens in iter_docs(self.topdir, self.stoplist):
             yield self.dictionary.doc2bow(tokens)
@@ -43,7 +45,6 @@ def readinStopWords():
     return stopWords
 
 
-
 def readinData():
     df = pd.read_csv("../Data/Data_New/Data_Out/DataFound.csv")
     testdata = df[df['Asilomar'] == True]['Author'].tolist()
@@ -54,23 +55,25 @@ def readinData():
         newname = array[0]+array[1]
         newname = newname.replace(' ','')
         othername.append(newname)
-    testindex = df[df['Asilomar'] == True]['ID'].tolist()
-    return othername,realname,testdata
+    # testindex = df[df['Asilomar'] == True]['ID'].tolist()
+
+    return othername, realname, testdata
 
 
 def readinData2():
     df = pd.read_csv("../Data/AsilomarAttendeeReport.csv")
     realname1 = df['Name'].tolist()
+    del realname1[-1]
     othername1 = []
     for i in range(173):
         array1 = realname1[i].lower().split(',')
         newname1 = array1[1]+array1[0]
         newname1 = newname1.replace(' ','')
         othername1.append(newname1)
-    return othername1,realname1
+    return othername1, realname1
 
 
-def build_train_set(topdir, stoplist): 
+def build_train_set(topdir):
     train_set = []
     name = []
     for fn in os.listdir(topdir):
@@ -82,7 +85,7 @@ def build_train_set(topdir, stoplist):
             fin.close()
     for i in range(len(name)):
         name[i] = name[i][name[i].find('pro')+4:name[i].find('.')]
-    return train_set,name
+    return train_set, name
 
 
 def checkCoauther(train_set):
@@ -90,14 +93,16 @@ def checkCoauther(train_set):
     with open("../Data/Data/IDs_Data/publicationNodes.txt") as text_file:
         f = text_file.read()
     array = f.split('\n')
+    # print array
     for i in xrange(len(array)):
         line = str(array[i]).split(',')
         if((len(line)>2) & (len(line)<10)):
             for j in xrange(len(line)-1):
                 key = line[j+1][line[j+1].find('00')+2:]
                 key = int(key)
+                # print key
                 if(key not in Coauther):
-                    Coauther[key] = Set()                      
+                    Coauther[key] = Set()
                 for k in xrange(len(line)-1):    
                     num = line[k+1]
                     if (k == len(line)-1):
@@ -123,8 +128,8 @@ def checkSession(train_set, filename):
                 key = line[j+1][line[j+1].find('00')+2:]
                 key = int(key)
                 if(key not in Coauther):
-                    Coauther[key] = Set()                      
-                for k in xrange(len(line)-1):    
+                    Coauther[key] = Set()
+                for k in xrange(len(line)-1):
                     num = line[k+1]
                     if (k == len(line)-1):
                         value = num[num.find('00')+2:num.find('\r')]
@@ -137,21 +142,23 @@ def checkSession(train_set, filename):
                         Coauther[key] = tempset
     return Coauther
 
+
 def buildSreModel(basic_matrix,profile,k1,k2,filename, coauther = False):
     ser_matrix = basic_matrix[:]
     k1 = 1
     k2 = 1
     if(coauther):
         authorMap = checkSession(profile, filename)
-        for target,people in authorMap.items():
-            print target,'correspond',people
+        for target, people in authorMap.items():
+            print target, 'correspond', people
             people = list(people)
             result = cosine_similarity(basic_matrix[target:target+1], basic_matrix[:])
             for j in people:
                 j = int(j)
-                if(result[0][j]!=1.0):
+                if result[0][j] != 1.0:
                     ser_matrix[target] = k1*basic_matrix[target]+sum(basic_matrix[j]*(1/(k2+result[0][j])))
     return ser_matrix
+
 
 def deleteCoauthor(coauther, recommendation, index):
     flag = True
@@ -180,12 +187,14 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
     for j in range(tfidf_matrix_train.shape[0]):
         targetname = relname[j]
         targetname = targetname.strip()
+        # print targetname
         for n in range(len(othername1)):
             othername1[n] = othername1[n].strip()
             if (targetname == othername1[n]):
                 print j,targetname
                 temp.append(j)
-                result = cosine_similarity(tfidf_matrix_train[j:j+1], tfidf_matrix_train)
+                result = cosine_similarity(tfidf_matrix_train[j], tfidf_matrix_train)
+                print result
                 index = [i[0] for i in sorted(enumerate(result[0]), key=lambda x:x[1],reverse=True)]
                 recList = index[1:listsize+1]
                 if(j in authorMap.keys()):
@@ -194,9 +203,9 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
                     recList = deleteCoauthor(coauther, recList, index)
                 recomd = []
                 similar = []
-                for k in recList: 
+                for k in recList:
                     recomd.append(relname[k])
-                    similar.append(result[0][k]) 
+                    similar.append(result[0][k])
                 with open('../RecommendationResult/'+outname+'Model/'+relname[j]+'.txt','w') as fn:
                     fn.write(realname1[n]+" ID:"+str(j)+"\n\n")
                     for n1 in xrange(len(recomd)):
@@ -209,7 +218,6 @@ def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realnam
     return temp
 
 
-
 # if __name__ == "__main__":
 def run(k1, k2, listsize, idf, session, outname):
     start_time = time.time()
@@ -218,9 +226,9 @@ def run(k1, k2, listsize, idf, session, outname):
     # listsize = int(sys.argv[3])
     filename = "../Data/Data/IDs_Data/sessionNodes.txt"
     stopWords = readinStopWords()
-    train_set,name = build_train_set("../Data/Data/Profile_Data",stopWords)
-    tfidf_vectorizer = TfidfVectorizer(norm=u'l2',stop_words=stopWords,use_idf=idf)
-    basic_profile = tfidf_vectorizer.fit_transform(train_set[:])
+    train_set,name = build_train_set("../Data/Data/Profile_Data")
+    tfidf_vectorizer = TfidfVectorizer(norm=None, stop_words=stopWords, use_idf=idf)
+    basic_profile = tfidf_vectorizer.fit_transform(train_set)
 
     othername,realname,testdata = readinData()
     othername1,realname1 = readinData2()
@@ -231,7 +239,3 @@ def run(k1, k2, listsize, idf, session, outname):
     writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,testdata,listsize, outname)
 
     print("--- %s seconds ---" % (time.time() - start_time))
-
-
-
-

@@ -107,10 +107,9 @@ def checkMailList(train_set):
     mail = {}
     for i in range(len(train_set)):
         if((train_set[i].find('MailingList')!=-1) & (train_set[i].find('esip-all')==-1)):
-            #print 'name is ',name[i]
             profile = train_set[i]
             position = list(find_all(profile,'ListName'))
-            for j in xrange(0,len(position),2):
+            for j in range(0,len(position),2):
                 if(mail.has_key(profile[position[j]+9:position[j+1]-2])):
                     mail[profile[position[j]+9:position[j+1]-2]] = mail.get(profile[position[j]+9:position[j+1]-2])+','+str(i)
                 else:
@@ -197,7 +196,7 @@ def deleteCoauthor(coauther, recommendation, index):
 
 # In[64]:
 
-def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authormap,listsize, outname):
+def writeOutput(tfidf_matrix_train,relname,othername,othername1,realname,realname1,authorMap,listsize, outname):
     temp = []
     for j in range(tfidf_matrix_train.shape[0]):
         targetname = relname[j]
@@ -252,7 +251,3 @@ def run(k1, k2, listsize, outname):
 
     writeOutput(ser_profile,name,othername,othername1,realname,realname1,authorMap,listsize, outname)
     print("--- %s seconds ---" % (time.time() - start_time))
-
-
-
-
